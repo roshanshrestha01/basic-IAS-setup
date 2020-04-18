@@ -6,7 +6,7 @@ resource "aws_vpc" "accounting_box_vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "accounting-box-production-vpc"
+    Name = "accounting-box-${var.environment}-vpc"
   }
 }
 
@@ -15,7 +15,7 @@ resource "aws_internet_gateway" "accounting_box_gateway" {
   vpc_id = "${aws_vpc.accounting_box_vpc.id}"
 
   tags = {
-    Name = "production-igw"
+    Name = "${var.environment}-igw"
   }
 }
 
@@ -103,7 +103,7 @@ resource "aws_security_group" "allow_redis" {
   }
 
   tags = {
-    Name = "production-redis"
+    Name = "${var.environment}-redis"
   }
 }
 
@@ -120,7 +120,7 @@ resource "aws_subnet" "us_west_2_public" {
     availability_zone = "us-west-2"
 
     tags = {
-        Name = "public-subnet-production"
+        Name = "public-subnet-${var.environment}"
     }
 }
 
@@ -133,7 +133,7 @@ resource "aws_route_table" "us_west_2_public" {
     }
 
     tags = {
-        Name = "public-subnet-production"
+        Name = "public-subnet-${var.environment}"
     }
 }
 
@@ -150,7 +150,7 @@ resource "aws_subnet" "us_west_2_private" {
     availability_zone = "us-west-2"
 
     tags = {
-        Name = "private-subnet-production"
+        Name = "private-subnet-${var.environment}"
     }
 }
 
