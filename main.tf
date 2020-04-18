@@ -2,10 +2,10 @@ provider "aws" {}
 
 # Setting up Initial VPC
 resource "aws_vpc" "accounting_box_vpc" {
-  cidr_block           = "${var.vpc_cider}"
+  cidr_block           = "${var.vpc_cidr}"
   enable_dns_hostnames = true
 
-  tags {
+  tags = {
     Name = "accounting-box-production-vpc"
   }
 }
@@ -14,7 +14,7 @@ resource "aws_vpc" "accounting_box_vpc" {
 resource "aws_internet_gateway" "accounting_box_gateway" {
   vpc_id = "${aws_vpc.accounting_box_vpc.id}"
 
-  tags {
+  tags = {
     Name = "production-igw"
   }
 }
@@ -76,7 +76,7 @@ resource "aws_security_group" "nat" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name = "NATSG"
   }
 }
@@ -92,7 +92,7 @@ resource "aws_security_group" "allow_redis" {
     from_port   = 6397
     to_port     = 6397
     protocol    = "tcp"
-    cidr_blocks = "${aws_vpc.main.cidr_block}"
+    cidr_blocks = ["${aws_vpc.accounting_box_vpc.cidr_block}"]
   }
 
   egress {
@@ -102,14 +102,14 @@ resource "aws_security_group" "allow_redis" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name = "production-redis"
   }
 }
-# Elastic IP
+
 resource "aws_eip" "nat" {
-    instance = "${aws_instance.nat.id}"
-    vpc = true
+  vpc              = true
+  public_ipv4_pool = "ipv4pool-ec2-012345"
 }
 
 # Public Subnet
@@ -119,7 +119,7 @@ resource "aws_subnet" "us_west_2_public" {
     cidr_block = "${var.public_subnet_cidr}"
     availability_zone = "us-west-2"
 
-    tags {
+    tags = {
         Name = "public-subnet-production"
     }
 }
@@ -132,7 +132,7 @@ resource "aws_route_table" "us_west_2_public" {
         gateway_id = "${aws_internet_gateway.accounting_box_gateway.id}"
     }
 
-    tags {
+    tags = {
         Name = "public-subnet-production"
     }
 }
@@ -149,7 +149,7 @@ resource "aws_subnet" "us_west_2_private" {
     cidr_block = "${var.private_subnet_cidr}"
     availability_zone = "us-west-2"
 
-    tags {
+    tags = {
         Name = "private-subnet-production"
     }
 }
@@ -171,7 +171,7 @@ resource "aws_route_table" "us_west_2_private" {
         instance_id = "${aws_nat_gateway.public_ngw.id}"
     }
 
-    tags {
+    tags = {
         Name = "private-subnet"
     }
 }
