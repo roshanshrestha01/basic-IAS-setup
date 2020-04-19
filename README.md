@@ -5,6 +5,8 @@ Project utilizes [registry](https://registry.terraform.io/) modules to build inf
 Register project modules
 
 * [AWS VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc)
+* [AWS RDS AURORA](https://github.com/terraform-aws-modules/terraform-aws-rds-aurora)
+
 
 ## Setting up terraform
 
