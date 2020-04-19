@@ -1,7 +1,7 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "accounting-box-vpc-staging"
+  name = "bats-staging"
   cidr = "10.1.0.0/16"
   enable_ipv6 = false
   azs             = ["us-west-2"]
