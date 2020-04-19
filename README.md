@@ -2,6 +2,10 @@
 
 Project utilized [registry](https://registry.terraform.io/) modules to build infrastructure
 
+Register project
+
+* [AWS VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc)
+
 ## Setting up terraform
 
 * Download terraform from [here](https://www.terraform.io/downloads.html).
