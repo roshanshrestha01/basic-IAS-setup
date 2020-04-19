@@ -12,7 +12,9 @@ module "vpc" {
   single_nat_gateway = false
   enable_vpn_gateway = true
 
+  create_database_subnet_route_table=false
   create_redshift_subnet_route_table=false
+  create_elasticache_subnet_route_table=false
   
 
   tags = {
