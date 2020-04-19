@@ -1,8 +1,8 @@
 # Terraform build up
 
-Project utilized [registry](https://registry.terraform.io/) modules to build infrastructure
+Project utilizes [registry](https://registry.terraform.io/) modules to build infrastructure
 
-Register project
+Register project modules
 
 * [AWS VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc)
 
