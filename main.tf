@@ -1,10 +1,10 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name            = "bats-staging"
+  name            = var.name
   cidr            = "10.1.0.0/16"
   enable_ipv6     = false
-  azs             = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  azs             = ["us-west-2a", "us-west-2c"]
   public_subnets  = ["10.1.0.0/24"]
   private_subnets = ["10.1.1.0/24"]
 
@@ -20,17 +20,33 @@ module "vpc" {
 
   tags = {
     Terraform   = "true"
-    Environment = "staging"
+    Environment = var.env
   }
 }
 
 module "security_groups" {
   source = "./modules/sercurity_groups"
   vpc_id = module.vpc.vpc_id
-  name   = "bats-staging"
+  name   = var.name
 
   tags = {
     Terraform   = "true"
-    Environment = "staging"
+    Environment = var.env
+  }
+}
+
+
+module "db" {
+  source = "./modules/db"
+  name = var.name
+  vpc_id = module.vpc.vpc_id
+  subnets = concat(module.vpc.private_subnets, ["subnet-089a7b1fc83e88e79"])
+  security_groups = [module.security_groups.postgres]
+  cidr_blocks = ["10.1.0.0/16"]
+  instance_type = "db.t2.micro"
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
   }
 }

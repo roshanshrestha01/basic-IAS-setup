@@ -8,7 +8,7 @@ variable "name" {
 }
 
 variable "tags" {
-    description = "Default tag"
+    description = "Default tag  "
     default = {
     }
 }
