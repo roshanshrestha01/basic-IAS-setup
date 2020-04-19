@@ -11,6 +11,7 @@ module "aurora" {
   engine_version                  = "9.6.12"
   subnets                         = var.subnets
   allowed_security_groups         = var.security_groups
+  vpc_security_group_ids          = var.security_groups
 
   allowed_cidr_blocks             = var.cidr_blocks
   vpc_id                          = var.vpc_id
