@@ -79,7 +79,7 @@ module "worker_ec2" {
   //  ami = "ami-ebd02392"
   iam_instance_profile = "bats"
   key_name = "devops"
-  ami = data.aws_ami.amazon_linux.id
+  ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [
     module.security_groups.app,
@@ -101,7 +101,7 @@ module "bastion_ec2" {
   number_of_instances = 1
   //  ami = "ami-ebd02392"
   key_name = "devops"
-  ami = data.aws_ami.amazon_linux.id
+  ami = data.aws_ami.ubuntu.id
   iam_instance_profile = "bastion"
   instance_type = "t2.micro"
   security_groups = [
