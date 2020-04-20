@@ -31,29 +31,3 @@ module "aurora" {
   )
 
 }
-//
-//resource "aws_db_parameter_group" "roshan" {
-//  name        = "aurora-db-postgres9.6.12-parameter-group"
-//  family      = "${var.name}-aurora-postgresql9.6.12"
-//  description = "${var.name}-aurora-db-postgres9.6.12-parameter-group"
-//
-//  tags = merge(
-//  {
-//    Name: "${var.name}-aurora-postgresql"
-//  },
-//  var.tags
-//  )
-//}
-//
-//resource "aws_rds_cluster_parameter_group" "aurora-cluster-postgres9-parameter-group" {
-//  name        = "${var.name}-aurora-postgres9.6.12-cluster-parameter-group"
-//  family      = "${var.name}-aurora-postgresql9.6.12"
-//  description = "${var.name}-aurora-postgres9.6.12-cluster-parameter-group"
-//
-//  tags = merge(
-//  {
-//    Name: "${var.name}-aurora-postgres9.6.12-cluster-parameter-group"
-//  },
-//  var.tags
-//  )
-//}
