@@ -35,26 +35,20 @@ module "security_groups" {
   }
 }
 
-data "aws_ami" "amazon_linux" {
+data "aws_ami" "ubuntu" {
   most_recent = true
 
-  owners = ["amazon"]
-
   filter {
-    name = "name"
-
-    values = [
-      "amzn-ami-hvm-*-x86_64-gp2",
-    ]
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
   }
 
   filter {
-    name = "owner-alias"
-
-    values = [
-      "amazon",
-    ]
+    name   = "virtualization-type"
+    values = ["hvm"]
   }
+
+  owners = ["099720109477"] # Canonical
 }
 
 module "ec2"  {
@@ -64,7 +58,7 @@ module "ec2"  {
 //  ami = "ami-ebd02392"
   iam_instance_profile = "bats"
   key_name = "devops"
-  ami = data.aws_ami.amazon_linux.id
+  ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [
     module.security_groups.app,
