@@ -35,6 +35,87 @@ module "security_groups" {
   }
 }
 
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+
+  owners = ["amazon"]
+
+  filter {
+    name = "name"
+
+    values = [
+      "amzn-ami-hvm-*-x86_64-gp2",
+    ]
+  }
+
+  filter {
+    name = "owner-alias"
+
+    values = [
+      "amazon",
+    ]
+  }
+}
+
+module "ec2"  {
+  source = "./modules/ec2"
+  name = "${var.name}-app-100"
+  number_of_instances = 1
+//  ami = "ami-ebd02392"
+  ami = data.aws_ami.amazon_linux.id
+  instance_type = "t2.micro"
+  security_groups = [
+    module.security_groups.app,
+    module.security_groups.ssh,
+  ]
+  subnets = module.vpc.private_subnets
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
+
+module "worker_ec2" {
+  source = "./modules/ec2"
+  name = "${var.name}-worker-100"
+  number_of_instances = 1
+  //  ami = "ami-ebd02392"
+  ami = data.aws_ami.amazon_linux.id
+  instance_type = "t2.micro"
+  security_groups = [
+    module.security_groups.app,
+    module.security_groups.ssh,
+    module.security_groups.worker
+  ]
+  subnets = module.vpc.private_subnets
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
+
+
+module "bastion_ec2" {
+  source = "./modules/ec2"
+  name = "${var.name}-bastion"
+  number_of_instances = 1
+  //  ami = "ami-ebd02392"
+  ami = data.aws_ami.amazon_linux.id
+  instance_type = "t2.micro"
+  security_groups = [
+    module.security_groups.app,
+    module.security_groups.ssh,
+    module.security_groups.all
+  ]
+  subnets = module.vpc.public_subnets
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
 
 module "db" {
   source = "./modules/db"

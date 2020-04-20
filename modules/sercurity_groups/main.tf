@@ -45,9 +45,17 @@ resource "aws_security_group" "worker" {
 
   ingress {
     description = "HTTP opened for all"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port   = 9093
+    to_port     = 9093
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTP opened for all"
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
@@ -92,6 +100,66 @@ resource "aws_security_group" "redis" {
   )
 
 }
+
+
+resource "aws_security_group" "ssh_tunnel" {
+  name        = "${var.name}-ssh-tunnel"
+  description = "Allow ssh inbound traffic"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Open port for ssh"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+  {
+    "Name" = "${var.name}-ssh-tunnel"
+  },
+  var.tags,
+  )
+
+}
+
+
+// To be commented in production
+resource "aws_security_group" "all" {
+  name        = "${var.name}-all"
+  description = "Allow all inbound traffic"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Open port for all"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+  {
+    "Name" = "${var.name}-ssh-tunnel"
+  },
+  var.tags,
+  )
+
+}
+
 
 resource "aws_security_group" "postgres" {
   name        = "${var.name}-postgres"

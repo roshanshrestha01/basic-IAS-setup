@@ -6,6 +6,7 @@ Register project modules
 
 * [AWS VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc)
 * [AWS RDS AURORA](https://github.com/terraform-aws-modules/terraform-aws-rds-aurora)
+* [AWS EC2](https://github.com/terraform-aws-modules/terraform-aws-ec2-instance)
 
 
 ## Setting up terraform
