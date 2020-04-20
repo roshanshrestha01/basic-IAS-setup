@@ -15,6 +15,11 @@ Register project modules
 * Unzip downloaded file
 * Move unzip file `sudo mv terraform /usr/local/bin/`
 
+## Service to setup from AWS dashboard
+
+* Create a `IAM` role to be used service created from terraform
+* Create a `Key Pair` to be used
+
 
 ## Setting aws credentials
 
@@ -32,3 +37,7 @@ $ terraform plan
 $ terraform apply
 ```
 
+## SSH into private ec2
+
+We need to config customer gateway service to access private ec2 if not configured. 
+After 

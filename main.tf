@@ -62,6 +62,8 @@ module "ec2"  {
   name = "${var.name}-app-100"
   number_of_instances = 1
 //  ami = "ami-ebd02392"
+  iam_instance_profile = "bats"
+  key_name = "devops"
   ami = data.aws_ami.amazon_linux.id
   instance_type = "t2.micro"
   security_groups = [
@@ -81,6 +83,8 @@ module "worker_ec2" {
   name = "${var.name}-worker-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392"
+  iam_instance_profile = "bats"
+  key_name = "devops"
   ami = data.aws_ami.amazon_linux.id
   instance_type = "t2.micro"
   security_groups = [
@@ -102,7 +106,9 @@ module "bastion_ec2" {
   name = "${var.name}-bastion"
   number_of_instances = 1
   //  ami = "ami-ebd02392"
+  key_name = "devops"
   ami = data.aws_ami.amazon_linux.id
+  iam_instance_profile = "bastion"
   instance_type = "t2.micro"
   security_groups = [
     module.security_groups.app,
@@ -116,18 +122,23 @@ module "bastion_ec2" {
     Environment = var.env
   }
 }
-
-module "db" {
-  source = "./modules/db"
-  name = var.name
-  vpc_id = module.vpc.vpc_id
-  subnets = module.vpc.private_subnets
-  security_groups = [module.security_groups.postgres]
-  cidr_blocks = ["10.1.0.0/16"]
-  instance_type = "db.r4.large"
-
-  tags = {
-    Terraform   = "true"
-    Environment = var.env
-  }
-}
+//
+//resource "aws_eip" "bastion_ec2" {
+//  vpc      = true
+//  instance = module.bastion_ec2.id
+//}
+//
+//module "db" {
+//  source = "./modules/db"
+//  name = var.name
+//  vpc_id = module.vpc.vpc_id
+//  subnets = module.vpc.private_subnets
+//  security_groups = [module.security_groups.postgres]
+//  cidr_blocks = ["10.1.0.0/16"]
+//  instance_type = "db.r4.large"
+//
+//  tags = {
+//    Terraform   = "true"
+//    Environment = var.env
+//  }
+//}
