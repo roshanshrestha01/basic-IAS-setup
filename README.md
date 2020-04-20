@@ -37,7 +37,10 @@ $ terraform plan
 $ terraform apply
 ```
 
+<!---
 ## SSH into private ec2
 
 We need to config customer gateway service to access private ec2 if not configured. 
 After 
+
+-->
