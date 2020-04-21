@@ -1,4 +1,4 @@
-# Terraform build up
+# Build
 
 Project utilizes [registry](https://registry.terraform.io/) modules to build infrastructure
 
@@ -9,16 +9,17 @@ Register project modules
 * [AWS EC2](https://github.com/terraform-aws-modules/terraform-aws-ec2-instance)
 
 
-## Setting up terraform
+## Install terraform
 
 * Download terraform from [here](https://www.terraform.io/downloads.html).
 * Unzip downloaded file
 * Move unzip file `sudo mv terraform /usr/local/bin/`
 
 ## Service to setup from AWS dashboard
-
-* Create a `IAM` role to be used service created from terraform
-* Create a `Key Pair` to be used
+Services is to be created from AWS dashboard and configured in `main.ts`
+* Create a `IAM` role
+* Create a `Key Pair` 
+* Ensure `SSL Certificate` 
 
 
 ## Setting aws credentials
@@ -29,7 +30,7 @@ $ export AWS_SECRET_ACCESS_KEY="<SECRET_ACCESS_KEY>"
 $ export AWS_DEFAULT_REGION="<DEFAULT_REGION>"
 ```
 
-## Terrafrom build
+## Terraform
 
 ```sh
 $ terraform init
@@ -38,8 +39,10 @@ $ terraform apply
 ```
 
 ## Checklist
-### SSH hardening
+### Necessary packeges
+- [ ] Execute `install.sh`to install necessary package and ruby 
 
+### SSH hardening
 - [ ] Change default ports also security group ports
 - [ ] Enable Verbose Logging `LogLevel VERBOSE`
 - [ ] Disable root access `PermitRootLogin no`
@@ -50,3 +53,8 @@ $ terraform apply
 
 - [ ] Delete unwanted users `deluser --remove-home <username>`
 - [ ] Remove unwanted packages `apt autoremove --purge`
+
+### Code base
+- [ ] Configure `ssh-kekgen` in new user created
+- [ ] Add public key of users in `.ssh/authrozied_keys`
+- [ ] Clone projecs repo to server  

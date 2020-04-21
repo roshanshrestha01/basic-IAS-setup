@@ -11,7 +11,7 @@ source ~/.bashrc
 
 rbenv install -v 2.3.1
 rbenv global 2.3.1
-echo “gem: --no-document” > ~/.gemrc # Disable rubygems to generate local documentation for each gem that you install
+echo "gem: --no-document" > ~/.gemrc # Disable rubygems to generate local documentation for each gem that you install
 
 #gem install rails
 #rbenv rehash
