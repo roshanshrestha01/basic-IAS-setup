@@ -1,6 +1,9 @@
+############################
+## VPC setup
+############################
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
-
   name            = var.name
   cidr            = "10.1.0.0/16"
   enable_ipv6     = false
@@ -23,6 +26,11 @@ module "vpc" {
     Environment = var.env
   }
 }
+
+
+############################
+## Security groups
+############################
 
 module "security_groups" {
   source = "./modules/sercurity_groups"
@@ -51,6 +59,11 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
+
+############################
+## EC2 intances
+############################
+
 module "ec2"  {
   source = "./modules/ec2"
   name = "${var.name}-app-100"
@@ -69,6 +82,8 @@ module "ec2"  {
   tags = {
     Terraform   = "true"
     Environment = var.env
+    env = var.env
+    role = "app"
   }
 }
 
@@ -94,7 +109,6 @@ module "worker_ec2" {
   }
 }
 
-
 module "bastion_ec2" {
   source = "./modules/ec2"
   name = "${var.name}-bastion"
@@ -116,12 +130,78 @@ module "bastion_ec2" {
     Environment = var.env
   }
 }
+
 //
 //resource "aws_eip" "bastion_ec2" {
 //  vpc      = true
 //  instance = module.bastion_ec2.id
 //}
-//
+
+
+############################
+## S3 objects
+############################
+
+module "zenledger_gua" {
+  source = "./modules/s3"
+  region = "us-west-2"
+  bucket = "bats-staging-zenledger-gua"
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
+
+module "admin_metric_data" {
+  source = "./modules/s3"
+  region = "us-west-2"
+  bucket = "bats-staging-admin.metric.data"
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
+
+module "zenledger_pdf" {
+  source = "./modules/s3"
+  region = "us-west-2"
+  bucket = "bats-staging-zenledger-pdf"
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
+
+module "admin_subpoena_files" {
+  source = "./modules/s3"
+  region = "us-west-2"
+  bucket = "bats-staging-admin.subpoena.files"
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
+
+module "zenledger_csv" {
+  source = "./modules/s3"
+  region = "us-west-2"
+  bucket = "bats-staging-zenledger-csv"
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
+
+
+############################
+## Database aurara setup
+############################
+
 //module "db" {
 //  source = "./modules/db"
 //  name = var.name

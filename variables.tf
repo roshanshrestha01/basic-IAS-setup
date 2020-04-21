@@ -3,6 +3,7 @@ variable "aws_region" {
   default     = "us-west-2"
 }
 
+
 variable "name" {
   description = "Default name"
   default     = "bats-staging"
