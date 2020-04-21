@@ -37,11 +37,16 @@ $ terraform plan
 $ terraform apply
 ```
 
-
-## SSH hardening
+## Checklist
+### SSH hardening
 
 * Change default ports also security group ports
 * Enable Verbose Logging `LogLevel VERBOSE`
 * Disable root access `PermitRootLogin no`
 * Disconnet Idle session `ClientAliveInterval 300  ClientAliveCountMax 0`
 * Disable Password Authentication `PasswordAuthentication no`
+
+### OS hardening
+
+* Delete unwanted users `deluser --remove-home <username>`
+* Remove unwanted packages `apt autoremove --purge`
