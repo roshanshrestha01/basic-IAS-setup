@@ -37,10 +37,11 @@ $ terraform plan
 $ terraform apply
 ```
 
-<!---
-## SSH into private ec2
 
-We need to config customer gateway service to access private ec2 if not configured. 
-After 
+## SSH hardening
 
--->
+* Change default ports also security group ports
+* Enable Verbose Logging `LogLevel VERBOSE`
+* Disable root access `PermitRootLogin no`
+* Disconnet Idle session `ClientAliveInterval 300  ClientAliveCountMax 0`
+* Disable Password Authentication `PasswordAuthentication no`
