@@ -18,6 +18,17 @@ Register project modules
 * Unzip downloaded file
 * Move unzip file `sudo mv terraform /usr/local/bin/`
 
+## Terraform state in s3
+We need to create a bucket where terraform state will be stored
+and dynamo db to add state locking feature
+* `cd ./remote` 
+* `terraform init`
+* `terraform plan` 
+* `terraform apply` 
+
+Bucket and dynamodb should be created. Now use bucket name and dynamo db name at project `backend.tf`.
+
+
 ## Service to setup from AWS dashboard
 Services is to be created from AWS dashboard and configured in `main.ts`
 * Create a `IAM` role
@@ -34,6 +45,10 @@ $ export AWS_DEFAULT_REGION="<DEFAULT_REGION>"
 ```
 
 ## Terraform
+
+Use these command from project root.
+
+> If no S3BucketFound error is shown remove `rm -rf ./terraform`
 
 ```sh
 $ terraform init
