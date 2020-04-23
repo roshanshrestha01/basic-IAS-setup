@@ -8,7 +8,7 @@ Register project modules
 * [AWS RDS AURORA](https://github.com/terraform-aws-modules/terraform-aws-rds-aurora)
 * [AWS EC2](https://github.com/terraform-aws-modules/terraform-aws-ec2-instance)
 
->[!WARNING]
+
 > :warning: **Terraform state is not shared. So each initialize might create resource among team members**
 
 
