@@ -68,9 +68,9 @@ module "ec2"  {
   source = "./modules/ec2"
   name = "${var.name}-app-100"
   number_of_instances = 1
-//  ami = "ami-ebd02392"
-  iam_instance_profile = "bats"
-  key_name = "devops"
+//  ami = "ami-ebd02392" # Replace with custom AMI if present
+  iam_instance_profile = "bats" # Replace IAM user
+  key_name = "devops" # Replace key name
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [
@@ -131,7 +131,8 @@ module "bastion_ec2" {
   }
 }
 
-//
+// Uncomment to assign elastic ip to bastion
+
 //resource "aws_eip" "bastion_ec2" {
 //  vpc      = true
 //  instance = module.bastion_ec2.id
@@ -145,7 +146,7 @@ module "bastion_ec2" {
 module "zenledger_gua" {
   source = "./modules/s3"
   region = "us-west-2"
-  bucket = "bats-staging-zenledger-gua"
+  bucket = "${var.name}-zenledger-gua"
 
   tags = {
     Terraform   = "true"
@@ -156,7 +157,7 @@ module "zenledger_gua" {
 module "admin_metric_data" {
   source = "./modules/s3"
   region = "us-west-2"
-  bucket = "bats-staging-admin.metric.data"
+  bucket = "${var.name}-admin-metric-data"
 
   tags = {
     Terraform   = "true"
@@ -167,7 +168,7 @@ module "admin_metric_data" {
 module "zenledger_pdf" {
   source = "./modules/s3"
   region = "us-west-2"
-  bucket = "bats-staging-zenledger-pdf"
+  bucket = "${var.name}-zenledger-pdf"
 
   tags = {
     Terraform   = "true"
@@ -178,7 +179,7 @@ module "zenledger_pdf" {
 module "admin_subpoena_files" {
   source = "./modules/s3"
   region = "us-west-2"
-  bucket = "bats-staging-admin.subpoena.files"
+  bucket = "${var.name}-admin-subpoena-files"
 
   tags = {
     Terraform   = "true"
@@ -189,7 +190,7 @@ module "admin_subpoena_files" {
 module "zenledger_csv" {
   source = "./modules/s3"
   region = "us-west-2"
-  bucket = "bats-staging-zenledger-csv"
+  bucket = "${var.name}-zenledger-csv"
 
   tags = {
     Terraform   = "true"
