@@ -9,7 +9,7 @@ Register project modules
 * [AWS EC2](https://github.com/terraform-aws-modules/terraform-aws-ec2-instance)
 
 
-> :warning: **Terraform state is not shared. So each initialize might create resource among team members**
+> :warning: **Terraform state is is stored in s3 bucket**
 
 
 ## Install terraform
