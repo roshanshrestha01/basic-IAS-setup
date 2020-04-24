@@ -50,6 +50,7 @@ Use these command from project root.
 
 > If no S3BucketFound error is shown remove `rm -rf ./terraform`
 
+[Note: Please configure `IAM role`, `key_pair` and `ssl_certificate`]
 ```sh
 $ terraform init
 $ terraform plan

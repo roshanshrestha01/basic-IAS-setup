@@ -27,7 +27,6 @@ module "vpc" {
   }
 }
 
-
 ############################
 ## Security groups
 ############################
@@ -59,10 +58,31 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-
 ############################
 ## EC2 intances
 ############################
+
+module "bastion_ec2" {
+  source = "./modules/ec2"
+  name = "${var.name}-bastion"
+  number_of_instances = 1
+  //  ami = "ami-ebd02392"
+  key_name = "devops"
+  ami = data.aws_ami.ubuntu.id
+  iam_instance_profile = "bastion"
+  instance_type = "t2.micro"
+  security_groups = [
+    module.security_groups.app,
+    module.security_groups.ssh,
+    module.security_groups.all
+  ]
+  subnets = module.vpc.public_subnets
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
 
 module "ec2"  {
   source = "./modules/ec2"
@@ -75,6 +95,30 @@ module "ec2"  {
   instance_type = "t2.micro"
   security_groups = [
     module.security_groups.app,
+    module.security_groups.ssh,
+  ]
+  subnets = module.vpc.private_subnets
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+    env = var.env
+    role = "app"
+  }
+}
+
+module "node"  {
+  source = "./modules/ec2"
+  name = "${var.name}-node-100"
+  number_of_instances = 1
+  //  ami = "ami-ebd02392" # Replace with custom AMI if present
+  iam_instance_profile = "bats" # Replace IAM user
+  key_name = "devops" # Replace key name
+  ami = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro"
+  security_groups = [
+    module.security_groups.app,
+    module.security_groups.tcp_9900,
     module.security_groups.ssh,
   ]
   subnets = module.vpc.private_subnets
@@ -109,21 +153,41 @@ module "worker_ec2" {
   }
 }
 
-module "bastion_ec2" {
+module "go_server_ec2" {
   source = "./modules/ec2"
-  name = "${var.name}-bastion"
+  name = "${var.name}-factory-server-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392"
+  iam_instance_profile = "bats"
   key_name = "devops"
   ami = data.aws_ami.ubuntu.id
-  iam_instance_profile = "bastion"
   instance_type = "t2.micro"
   security_groups = [
-    module.security_groups.app,
     module.security_groups.ssh,
-    module.security_groups.all
+    module.security_groups.factory_server
   ]
   subnets = module.vpc.public_subnets
+
+  tags = {
+    Terraform   = "true"
+    Environment = var.env
+  }
+}
+
+module "go_client_ec2" {
+  source = "./modules/ec2"
+  name = "${var.name}-factory-worker-100"
+  number_of_instances = 1
+  //  ami = "ami-ebd02392"
+  iam_instance_profile = "bats"
+  key_name = "devops"
+  ami = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro"
+  security_groups = [
+    module.security_groups.tcp_9900,
+    module.security_groups.ssh,
+  ]
+  subnets = module.vpc.private_subnets
 
   tags = {
     Terraform   = "true"
@@ -135,7 +199,7 @@ module "bastion_ec2" {
 
 //resource "aws_eip" "bastion_ec2" {
 //  vpc      = true
-//  instance = module.bastion_ec2.id
+//  instance = module.bastion_ec2.id[0]
 //}
 
 
@@ -198,7 +262,6 @@ module "zenledger_csv" {
   }
 }
 
-
 ############################
 ## Database aurara setup
 ############################
@@ -217,3 +280,22 @@ module "zenledger_csv" {
 //    Environment = var.env
 //  }
 //}
+
+############################
+## Elastic Loadbalancer
+############################
+module "alb"  {
+  source = "./modules/alb"
+  name = var.name
+  subnets = module.vpc.public_subnets
+  vpc_id = module.vpc.vpc_id
+  ssl_certificate = "arn:aws:acm:us-west-2:724528953930:certificate/063718e2-5c04-401b-80d3-52a71bac1626"
+  ec2_instances = concat(module.ec2.id, [])
+  security_groups = [
+    module.security_groups.app,
+  ]
+
+  tags = {
+    Terraform = "true"
+  }
+}

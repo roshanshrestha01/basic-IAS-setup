@@ -1,3 +1,3 @@
 output "id" {
-  value = module.ec2_instances.id[0]
+  value = module.ec2_instances.id
 }
