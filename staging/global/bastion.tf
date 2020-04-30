@@ -6,7 +6,6 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -23,7 +22,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-
 module "bastion" {
   source = "../../modules/ec2"
   name = "staging-bastion"
@@ -34,11 +32,11 @@ module "bastion" {
   key_name = "devops"
   instance_type = "t2.micro"
   security_groups = [
-    data.terraform_remote_state.vpc.outputs.vpc.security_groups.app,
-    data.terraform_remote_state.vpc.outputs.vpc.security_groups.ssh,
-    data.terraform_remote_state.vpc.outputs.vpc.security_groups.all
+    data.terraform_remote_state.vpc.outputs.sg_app,
+    data.terraform_remote_state.vpc.outputs.sg_ssh,
+    data.terraform_remote_state.vpc.outputs.sg_all
   ]
-  subnets = data.terraform_remote_state.vpc.outputs.vpc.public_subnets
+  subnets = data.terraform_remote_state.vpc.outputs.public_subnets
   user_data = file("./install.sh")
 
   tags = {

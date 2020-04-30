@@ -1,6 +1,10 @@
 ############################
 ## EC2 intances
 ############################
+locals {
+  name = "staging"
+  env = "staging"
+}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -19,8 +23,8 @@ data "aws_ami" "ubuntu" {
 }
 
 module "ec2"  {
-  source = "./modules/ec2"
-  name = "${var.name}-app-100"
+  source = "../../../modules/ec2"
+  name = "${local.name}-app-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392" # Replace with custom AMI if present
   iam_instance_profile = "bats" # Replace IAM user
@@ -28,22 +32,23 @@ module "ec2"  {
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [
-    module.security_groups.app,
-    module.security_groups.ssh,
+    data.terraform_remote_state.vpc.outputs.sg_app,
+    data.terraform_remote_state.vpc.outputs.sg_ssh,
   ]
-  subnets = module.vpc.private_subnets
+  subnets = data.terraform_remote_state.vpc.outputs.private_subnets
+  user_data = file("./install.sh")
 
   tags = {
     Terraform   = "true"
-    Environment = var.env
-    env = var.env
+    Environment = local.env
+    env = local.env
     role = "app"
   }
 }
 
 module "node"  {
-  source = "./modules/ec2"
-  name = "${var.name}-node-100"
+  source = "../../../modules/ec2"
+  name = "${local.name}-node-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392" # Replace with custom AMI if present
   iam_instance_profile = "bats" # Replace IAM user
@@ -51,23 +56,24 @@ module "node"  {
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [
-    module.security_groups.app,
-    module.security_groups.tcp_9900,
-    module.security_groups.ssh,
+    data.terraform_remote_state.vpc.outputs.sg_app,
+    data.terraform_remote_state.vpc.outputs.sg_ssh,
+    data.terraform_remote_state.vpc.outputs.sg_tcp_9900,
   ]
-  subnets = module.vpc.private_subnets
+  subnets = data.terraform_remote_state.vpc.outputs.private_subnets
+  user_data = file("./install.sh")
 
   tags = {
     Terraform   = "true"
-    Environment = var.env
-    env = var.env
+    Environment = local.env
+    env = local.env
     role = "app"
   }
 }
 
 module "worker_ec2" {
-  source = "./modules/ec2"
-  name = "${var.name}-worker-100"
+  source = "../../../modules/ec2"
+  name = "${local.name}-worker-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392"
   iam_instance_profile = "bats"
@@ -75,21 +81,22 @@ module "worker_ec2" {
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [
-    module.security_groups.app,
-    module.security_groups.ssh,
-    module.security_groups.worker
+    data.terraform_remote_state.vpc.outputs.sg_app,
+    data.terraform_remote_state.vpc.outputs.sg_ssh,
+    data.terraform_remote_state.vpc.outputs.sg_worker,
   ]
-  subnets = module.vpc.private_subnets
+  subnets = data.terraform_remote_state.vpc.outputs.private_subnets
+  user_data = file("./install.sh")
 
   tags = {
     Terraform   = "true"
-    Environment = var.env
+    Environment = local.env
   }
 }
 
 module "go_server_ec2" {
-  source = "./modules/ec2"
-  name = "${var.name}-factory-server-100"
+  source = "../../../modules/ec2"
+  name = "${local.name}-factory-server-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392"
   iam_instance_profile = "bats"
@@ -97,20 +104,21 @@ module "go_server_ec2" {
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [
-    module.security_groups.ssh,
-    module.security_groups.factory_server
+    data.terraform_remote_state.vpc.outputs.sg_ssh,
+    data.terraform_remote_state.vpc.outputs.sg_factory_server,
   ]
-  subnets = module.vpc.public_subnets
+  subnets = data.terraform_remote_state.vpc.outputs.public_subnets
+  user_data = file("./install.sh")
 
   tags = {
     Terraform   = "true"
-    Environment = var.env
+    Environment = local.env
   }
 }
 
 module "go_client_ec2" {
-  source = "./modules/ec2"
-  name = "${var.name}-factory-worker-100"
+  source = "../../../modules/ec2"
+  name = "${local.name}-factory-worker-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392"
   iam_instance_profile = "bats"
@@ -118,14 +126,15 @@ module "go_client_ec2" {
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   security_groups = [
-    module.security_groups.tcp_9900,
-    module.security_groups.ssh,
+    data.terraform_remote_state.vpc.outputs.sg_tcp_9900,
+    data.terraform_remote_state.vpc.outputs.sg_ssh,
   ]
-  subnets = module.vpc.private_subnets
+  subnets = data.terraform_remote_state.vpc.outputs.private_subnets
+  user_data = file("./install.sh")
 
   tags = {
     Terraform   = "true"
-    Environment = var.env
+    Environment = local.env
   }
 }
 
