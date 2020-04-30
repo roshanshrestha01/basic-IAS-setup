@@ -3,9 +3,9 @@
 ############################
 
 module "db" {
-  source = "..\/..\/modules\/db"
+  source = "../../modules/db"
   name = var.name
-  vpc_id = module.vpc.vpc_id
+  vpc_id = module.vpc
   subnets = module.vpc.private_subnets
   security_groups = [module.security_groups.postgres]
   cidr_blocks = ["10.1.0.0/16"]
