@@ -27,7 +27,7 @@ module "ec2"  {
   name = "${local.name}-app-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392" # Replace with custom AMI if present
-  iam_instance_profile = "bats" # Replace IAM user
+  iam_instance_profile = "iamrole" # Replace IAM user
   key_name = "devops" # Replace key name
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
@@ -51,7 +51,7 @@ module "node"  {
   name = "${local.name}-node-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392" # Replace with custom AMI if present
-  iam_instance_profile = "bats" # Replace IAM user
+  iam_instance_profile = "iamrole" # Replace IAM user
   key_name = "devops" # Replace key name
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
@@ -76,7 +76,7 @@ module "worker_ec2" {
   name = "${local.name}-worker-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392"
-  iam_instance_profile = "bats"
+  iam_instance_profile = "iamrole"
   key_name = "devops"
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
@@ -99,7 +99,7 @@ module "go_server_ec2" {
   name = "${local.name}-factory-server-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392"
-  iam_instance_profile = "bats"
+  iam_instance_profile = "iamrole"
   key_name = "devops"
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
@@ -121,7 +121,7 @@ module "go_client_ec2" {
   name = "${local.name}-factory-worker-100"
   number_of_instances = 1
   //  ami = "ami-ebd02392"
-  iam_instance_profile = "bats"
+  iam_instance_profile = "iamrole"
   key_name = "devops"
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
