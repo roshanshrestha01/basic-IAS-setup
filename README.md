@@ -46,7 +46,7 @@ $ export AWS_DEFAULT_REGION="<DEFAULT_REGION>"
 
 ## Terraform
 
-Use these command from project root.
+Use these command from individual component located at their environment.
 
 > If no S3BucketFound error is shown remove `rm -rf ./terraform`
 
