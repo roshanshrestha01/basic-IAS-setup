@@ -2,7 +2,7 @@
 ## Elastic Loadbalancer
 ############################
 module "alb"  {
-  source = "./modules/alb"
+  source = "..\/..\/modules\/alb"
   name = var.name
   subnets = module.vpc.public_subnets
   vpc_id = module.vpc.vpc_id
