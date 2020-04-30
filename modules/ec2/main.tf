@@ -11,6 +11,7 @@ module "ec2_instances" {
   subnet_ids                   = var.subnets
   iam_instance_profile = var.iam_instance_profile
   key_name = var.key_name
+  user_data = var.user_data
 
   tags = merge(
   {

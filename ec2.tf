@@ -17,6 +17,7 @@ module "bastion_ec2" {
     module.security_groups.all
   ]
   subnets = module.vpc.public_subnets
+  user_data = file("./install.sh")
 
   tags = {
     Terraform   = "true"
@@ -135,9 +136,9 @@ module "go_client_ec2" {
   }
 }
 
-// Uncomment to assign elastic ip to bastion
+ Uncomment to assign elastic ip to bastion
 
-//resource "aws_eip" "bastion_ec2" {
-//  vpc      = true
-//  instance = module.bastion_ec2.id[0]
-//}
+resource "aws_eip" "bastion_ec2" {
+  vpc      = true
+  instance = module.bastion_ec2.id[0]
+}
