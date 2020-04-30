@@ -32,7 +32,7 @@ module "vpc" {
 ############################
 
 module "security_groups" {
-  source = "./modules/sercurity_groups"
+  source = "..\/..\/modules\/sercurity_groups"
   vpc_id = module.vpc.vpc_id
   name   = var.name
 
